@@ -149,7 +149,9 @@ func main() {
 	listener, err := net.Listen("tcp", listenAddr)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
+	} else {
+		fmt.Fprintf(os.Stderr, "Started listening on %s\n", listenAddr)
+		fmt.Fprintln(os.Stderr, http.Serve(listener, log(http.DefaultServeMux)))
 	}
-	fmt.Fprintf(os.Stderr, "Started listening on %s\n", listenAddr)
-	fmt.Fprintln(os.Stderr, http.Serve(listener, log(http.DefaultServeMux)))
+	os.Exit(1)
 }

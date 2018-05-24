@@ -22,10 +22,24 @@ Usage of ProductAIStandalone:
         URL Prefix
 ```
 
-crontab:
+Shell script:
 
 ```
-@reboot /usr/local/bin/ProductAIStandalone --access-key-id 00000000000000000000000000000000 --url-prefix http://www.example.com/posts/ --service-id xxxxxxxx --listen 127.0.0.1:55555 > /ProductAI.log 2>&1 &
+#!/bin/bash
+
+/usr/local/bin/ProductAIStandalone \
+  --access-key-id 00000000000000000000000000000000 \
+     --url-prefix http://www.example.com/posts/ \
+     --service-id xxxxxxxx \
+         --listen 127.0.0.1:55555 \
+               >> /ProductAI.log 2>&1 &
+```
+
+Monit:
+
+```
+check process product-ai matching ProductAIStandalone
+  if does not exist for 2 cycles then exec "/start-product-ai.sh"
 ```
 
 cURL:
