@@ -118,7 +118,7 @@ func log(handler http.Handler) http.Handler {
 		fmt.Fprintf(os.Stderr,
 			"%s [%s] [%s] %d %s %s %s\n",
 			end.Format(time.RFC3339),
-			r.RemoteAddr,
+			realIp(r),
 			end.Sub(start),
 			rW.statusCode,
 			r.Method,
@@ -126,6 +126,10 @@ func log(handler http.Handler) http.Handler {
 			queries,
 		)
 	})
+}
+
+func realIp(r *http.Request) string {
+	return r.Header.Get("X-Real-Ip")
 }
 
 func init() {
