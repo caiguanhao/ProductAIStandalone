@@ -22,6 +22,24 @@ Usage of ProductAIStandalone:
         URL Prefix
 ```
 
+Docker Image:
+
+```
+(echo "FROM golang:1.7.1" && \
+ echo "RUN go get github.com/caiguanhao/ProductAIStandalone" && \
+ echo 'ENTRYPOINT ["/go/bin/ProductAIStandalone"]') | docker build -t product-ai-standalone -
+```
+
+Docker Container:
+
+```
+docker run --name product-ai --restart always -d -p="127.0.0.1:55555:8080" product-ai-standalone \
+  --access-key-id 00000000000000000000000000000000 \
+     --url-prefix http://www.example.com/posts/ \
+     --service-id xxxxxxxx \
+         --listen 0.0.0.0:8080
+```
+
 Shell script:
 
 ```
