@@ -1,5 +1,7 @@
 # ProductAIStandalone
 
+A standalone http server for ProductAI search.
+
 Install:
 
 ```
@@ -30,6 +32,19 @@ cURL:
 
 ```
 curl http://127.0.0.1:55555/SearchImageByURL -d 'url=https://upload.wikimedia.org/wikipedia/commons/thumb/2/28/Tischbank.jpg/640px-Tischbank.jpg'
+```
+
+nginx:
+
+```
+...
+
+location = /SearchImageByURL {
+    proxy_pass http://127.0.0.1:55555;
+    proxy_set_header X-Real-IP $remote_addr;
+}
+
+...
 ```
 
 LICENSE: MIT
