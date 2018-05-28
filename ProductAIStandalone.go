@@ -21,6 +21,9 @@ var (
 
 type (
 	searchResponse struct {
+		DetectedObjs []struct {
+			Loc []float64 `json:"loc"`
+		} `json:"detected_objs"`
 		Results []struct {
 			MetaData string  `json:"metadata"`
 			Score    float64 `json:"score"`
@@ -36,7 +39,8 @@ type (
 	}
 
 	processedSearchResponse struct {
-		Results []processedSearchResponseResult `json:"results"`
+		Coordinates [][]float64                     `json:"coordinates"`
+		Results     []processedSearchResponseResult `json:"results"`
 	}
 
 	responseWriter struct {
@@ -52,6 +56,7 @@ func (w *responseWriter) WriteHeader(statusCode int) {
 
 func search(w http.ResponseWriter, url string) error {
 	v := netUrl.Values{}
+	v.Set("ret_detected_objs", "1")
 	v.Set("url", url)
 	req, err := http.NewRequest("POST", "https://api.productai.cn/search/"+serviceId, strings.NewReader(v.Encode()))
 	if err != nil {
@@ -76,6 +81,9 @@ func search(w http.ResponseWriter, url string) error {
 	}
 
 	var processed processedSearchResponse
+	for _, result := range response.DetectedObjs {
+		processed.Coordinates = append(processed.Coordinates, result.Loc)
+	}
 	for _, result := range response.Results {
 		processed.Results = append(processed.Results, processedSearchResponseResult{
 			ImageUrl: result.URL,
