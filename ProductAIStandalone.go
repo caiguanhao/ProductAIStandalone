@@ -54,10 +54,13 @@ func (w *responseWriter) WriteHeader(statusCode int) {
 	w.statusCode = statusCode
 }
 
-func search(w http.ResponseWriter, url string) error {
+func search(w http.ResponseWriter, url string, coords []string) error {
 	v := netUrl.Values{}
 	v.Set("ret_detected_objs", "1")
 	v.Set("url", url)
+	if len(coords) == 4 {
+		v.Add("loc", strings.Join(coords, "-"))
+	}
 	req, err := http.NewRequest("POST", "https://api.productai.cn/search/"+serviceId, strings.NewReader(v.Encode()))
 	if err != nil {
 		return err
@@ -108,7 +111,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 			errorJson(w, "Please provide url", http.StatusBadRequest)
 			return
 		}
-		if err := search(w, url); err != nil {
+		if err := search(w, url, r.PostForm["coords[]"]); err != nil {
 			errorJson(w, err.Error(), http.StatusBadRequest)
 		}
 		return
