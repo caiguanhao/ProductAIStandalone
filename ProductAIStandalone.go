@@ -94,8 +94,7 @@ func search(w http.ResponseWriter, url string, coords []string) error {
 		})
 	}
 	w.Header().Set("Content-Type", "application/json")
-	err = json.NewEncoder(w).Encode(&processed)
-	return nil
+	return json.NewEncoder(w).Encode(&processed)
 }
 
 func errorJson(w http.ResponseWriter, msg string, status int) {
